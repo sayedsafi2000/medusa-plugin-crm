@@ -1,6 +1,6 @@
 {
   "name": "medusa-plugin-crm",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "CRM plugin for Medusa - Customer relationship management with notes, tasks, and activity tracking",
   "author": "Musafir",
   "license": "MIT",
@@ -24,7 +24,8 @@
     "build": "medusa plugin:build",
     "dev": "medusa plugin:develop",
     "deploy": "medusa plugin:publish",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "sync-crm-plugin": "yarn build && cd ../musafir-medusa-backend && rm -rf node_modules/medusa-plugin-crm && yarn install --force"
   },
   "dependencies": {
     "@medusajs/icons": "^2.13.1",
