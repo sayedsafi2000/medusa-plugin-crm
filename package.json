@@ -1,0 +1,93 @@
+{
+  "name": "medusa-plugin-crm",
+  "version": "1.0.3",
+  "description": "CRM plugin for Medusa - Customer relationship management with notes, tasks, and activity tracking",
+  "author": "Musafir",
+  "license": "MIT",
+  "files": [
+    ".medusa/server"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/medusa-plugin-crm"
+  },
+  "keywords": [
+    "medusa-plugin",
+    "medusa-v2",
+    "medusa-plugin-crm",
+    "crm",
+    "customer-management",
+    "notes",
+    "tasks"
+  ],
+  "scripts": {
+    "build": "medusa plugin:build",
+    "dev": "medusa plugin:develop",
+    "deploy": "medusa plugin:publish",
+    "prepublishOnly": "yarn build"
+  },
+  "dependencies": {
+    "@medusajs/icons": "^2.13.1",
+    "@medusajs/ui": "^4.0.30",
+    "clsx": "^2.1.1",
+    "lodash": "4.17.21",
+    "lucide-react": "^0.562.0",
+    "react-hook-form": "^7.49.2"
+  },
+  "devDependencies": {
+    "@medusajs/admin-sdk": "2.12.2",
+    "@medusajs/cli": "2.12.2",
+    "@medusajs/framework": "2.12.2",
+    "@medusajs/medusa": "2.12.2",
+    "@medusajs/test-utils": "2.12.2",
+    "@mikro-orm/cli": "6.4.3",
+    "@mikro-orm/core": "6.4.3",
+    "@mikro-orm/knex": "6.4.3",
+    "@mikro-orm/migrations": "6.4.3",
+    "@mikro-orm/postgresql": "6.4.3",
+    "@swc/core": "^1.7.28",
+    "@types/node": "^20.12.11",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.2.25",
+    "awilix": "^8.0.1",
+    "pg": "^8.13.0",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.14"
+  },
+  "peerDependencies": {
+    "@medusajs/admin-sdk": "^2.12.2",
+    "@medusajs/cli": "^2.12.2",
+    "@medusajs/framework": "^2.12.2",
+    "@medusajs/icons": "^2.13.1",
+    "@medusajs/medusa": "^2.12.2",
+    "@medusajs/test-utils": "^2.12.2",
+    "@medusajs/ui": "^4.0.30",
+    "@mikro-orm/cli": "6.4.3",
+    "@mikro-orm/core": "6.4.3",
+    "@mikro-orm/knex": "6.4.3",
+    "@mikro-orm/migrations": "6.4.3",
+    "@mikro-orm/postgresql": "6.4.3",
+    "awilix": "^8.0.1",
+    "pg": "^8.13.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    "./workflows": "./.medusa/server/src/workflows/index.js",
+    "./.medusa/server/src/modules/*": "./.medusa/server/src/modules/*/index.js",
+    "./modules/*": "./.medusa/server/src/modules/*/index.js",
+    "./providers/*": "./.medusa/server/src/providers/*/index.js",
+    "./*": "./.medusa/server/src/*.js",
+    "./admin": {
+      "import": "./.medusa/server/src/admin/index.mjs",
+      "require": "./.medusa/server/src/admin/index.js",
+      "default": "./.medusa/server/src/admin/index.js"
+    }
+  }
+}
