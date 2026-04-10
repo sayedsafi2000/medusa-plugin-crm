@@ -1,6 +1,6 @@
 {
   "name": "medusa-plugin-crm",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Production-ready CRM plugin for MedusaJS v2 — Sales pipeline, campaigns, automation rules, notifications, role-based permissions, CSV export, error logging, settings panel, customer timeline, and 15 admin pages",
   "author": "Musafir",
   "license": "MIT",
