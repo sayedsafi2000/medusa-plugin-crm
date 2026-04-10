@@ -1,7 +1,7 @@
 {
   "name": "medusa-plugin-crm",
-  "version": "1.1.0",
-  "description": "CRM plugin for Medusa - Customer relationship management with notes, tasks, and activity tracking",
+  "version": "3.0.0",
+  "description": "Production-ready CRM plugin for MedusaJS v2 — Sales pipeline, campaigns, automation rules, notifications, role-based permissions, CSV export, error logging, settings panel, customer timeline, and 15 admin pages",
   "author": "Musafir",
   "license": "MIT",
   "files": [
@@ -17,8 +17,21 @@
     "medusa-plugin-crm",
     "crm",
     "customer-management",
+    "sales-pipeline",
+    "leads",
     "notes",
-    "tasks"
+    "tasks",
+    "campaigns",
+    "automation",
+    "notifications",
+    "segments",
+    "tags",
+    "communication-logs",
+    "csv-export",
+    "error-logging",
+    "role-permissions",
+    "customer-timeline",
+    "settings-panel"
   ],
   "scripts": {
     "build": "medusa plugin:build",
