@@ -1,6 +1,6 @@
 {
   "name": "medusa-plugin-crm",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "CRM plugin for Medusa - Customer relationship management with notes, tasks, and activity tracking",
   "author": "Musafir",
   "license": "MIT",
@@ -40,6 +40,7 @@
     "@medusajs/framework": "2.12.2",
     "@medusajs/medusa": "2.12.2",
     "@medusajs/test-utils": "2.12.2",
+    "@medusajs/utils": "2.12.2",
     "@mikro-orm/cli": "6.4.3",
     "@mikro-orm/core": "6.4.3",
     "@mikro-orm/knex": "6.4.3",
@@ -66,6 +67,7 @@
     "@medusajs/medusa": "^2.12.2",
     "@medusajs/test-utils": "^2.12.2",
     "@medusajs/ui": "^4.0.30",
+    "@medusajs/utils": "^2.12.2",
     "@mikro-orm/cli": "6.4.3",
     "@mikro-orm/core": "6.4.3",
     "@mikro-orm/knex": "6.4.3",
