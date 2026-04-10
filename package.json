@@ -1,6 +1,6 @@
 {
   "name": "medusa-plugin-crm",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "CRM plugin for Medusa - Customer relationship management with notes, tasks, and activity tracking",
   "author": "Musafir",
   "license": "MIT",
@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/medusa-plugin-crm"
+    "url": "https://github.com/sayedsafi2000/medusa-plugin-crm"
   },
   "keywords": [
     "medusa-plugin",
