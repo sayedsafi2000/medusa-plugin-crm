@@ -25,11 +25,11 @@ A simple and powerful CRM plugin for MedusaJS v2 that helps you manage customers
 1. Install the plugin from npm:
 
 ```bash
-npm install @sayedsafi/medusa-plugin-crm
+npm install medusa-plugin-crm-sayedsafi
 # or
-yarn add @sayedsafi/medusa-plugin-crm
+yarn add medusa-plugin-crm-sayedsafi
 # or
-pnpm add @sayedsafi/medusa-plugin-crm
+pnpm add medusa-plugin-crm-sayedsafi
 ```
 
 2. Add the plugin to your `medusa-config.js`:
@@ -39,7 +39,7 @@ import { defineConfig } from "@medusajs/framework/utils"
 
 export default defineConfig({
   plugins: [
-    "@sayedsafi/medusa-plugin-crm",
+    "medusa-plugin-crm-sayedsafi",
   ],
 })
 ```

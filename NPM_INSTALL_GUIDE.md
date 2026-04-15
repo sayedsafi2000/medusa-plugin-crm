@@ -1,4 +1,4 @@
-# How to Install @sayedsafi/medusa-plugin-crm from NPM
+# How to Install medusa-plugin-crm-sayedsafi from NPM
 
 This guide explains exactly how to install and configure the plugin from npm.
 
@@ -7,16 +7,16 @@ This guide explains exactly how to install and configure the plugin from npm.
 ```bash
 cd /Users/safi/Desktop/Musafir\ storefront/musafir-medusa-backend
 
-npm install @sayedsafi/medusa-plugin-crm
+npm install medusa-plugin-crm-sayedsafi
 # or
-yarn add @sayedsafi/medusa-plugin-crm
-# or  
-pnpm add @sayedsafi/medusa-plugin-crm
+yarn add medusa-plugin-crm-sayedsafi
+# or
+pnpm add medusa-plugin-crm-sayedsafi
 ```
 
 This will:
 - Download the package from npm registry
-- Extract to `node_modules/@sayedsafi/medusa-plugin-crm/`
+- Extract to `node_modules/medusa-plugin-crm-sayedsafi/`
 - Install all dependencies (including @sendgrid/mail and twilio)
 - Create/update package-lock.json
 
@@ -33,7 +33,7 @@ export default defineConfig({
   },
   plugins: [
     // ... other plugins ...
-    "@sayedsafi/medusa-plugin-crm",  // Add this line
+    "medusa-plugin-crm-sayedsafi",  // Add this line
   ],
 })
 ```
