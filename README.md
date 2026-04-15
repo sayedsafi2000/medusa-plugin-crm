@@ -66,6 +66,21 @@ npx medusa develop
 
 Access the CRM dashboard at `/admin/crm`
 
+## ⚠️ Safety & Compatibility
+
+✅ **Non-invasive** - This plugin does NOT interfere with Medusa's core functions
+- Creates separate database tables with `crm_` prefix
+- Does not modify or override Medusa's customer authentication
+- Does not hook into signup, login, or Google OAuth flows
+- All CRM data is isolated and optional
+- Safe to install on production stores
+
+**Signup & OAuth remain completely unchanged:**
+- Standard customer signup works normally
+- Google OAuth authentication is not affected
+- Customer authentication and sessions are unchanged
+- This is a read-only CRM layer on top of your Medusa store
+
 ## Admin Dashboard
 
 Access the CRM dashboard at `/admin/crm`:
@@ -335,14 +350,21 @@ MIT © 2025 Musafir
 
 ## Changelog
 
-### 1.0.0 (April 16, 2025)
-- ✨ Initial release
-- ✨ Customer management
-- ✨ Lead pipeline
-- ✨ Task management
+### 4.0.0 (April 16, 2025)
+- ✨ **MAJOR REWRITE** - Simplified from 15+ features to core essentials
+- ✨ Removed: Error logging, role-based permissions, automation rules, notifications, segments, tags
+- ✨ Kept & improved: Customer management, lead pipeline, tasks, campaigns
+- ✨ Customer management with Medusa sync
+- ✨ Lead pipeline with status tracking
+- ✨ Task management with priorities and due dates
 - ✨ Email campaigns via SendGrid
 - ✨ SMS campaigns via Twilio
 - ✨ WhatsApp campaigns via Twilio
-- ✨ Communication logs
-- ✨ Admin dashboard
+- ✨ Communication logs with delivery tracking
+- ✨ Admin dashboard with metrics
 - ✨ Complete REST API
+- ✨ A/B testing support for campaigns
+- ✨ Scheduled and trigger-based campaign support
+
+### 3.0.4
+- Previous production-ready version with 15+ features
