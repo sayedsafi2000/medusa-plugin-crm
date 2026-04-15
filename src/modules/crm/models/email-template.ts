@@ -1,4 +1,4 @@
-declare class CrmEmailTemplate {
+class CrmEmailTemplate {
   id: string
   name: string
   subject: string
