@@ -5,34 +5,20 @@ export async function GET(
   res: MedusaResponse
 ) {
   const crm = req.scope.resolve("crm") as any
-  const { limit = 50, offset = 0 } = req.query
+  const { limit = 100, offset = 0 } = req.query
 
   try {
-    const leads = await crm.listCrmLead({
+    const logs = await crm.listCrmCommunicationLog({
       skip: Number(offset),
       take: Number(limit),
     })
 
     res.json({
-      leads,
+      logs,
       limit,
       offset,
     })
   } catch (error) {
     res.status(500).json({ error: (error as any).message })
-  }
-}
-
-export async function POST(
-  req: MedusaRequest,
-  res: MedusaResponse
-) {
-  const crm = req.scope.resolve("crm") as any
-
-  try {
-    const lead = await crm.createCrmLead(req.body)
-    res.status(201).json(lead)
-  } catch (error) {
-    res.status(400).json({ error: (error as any).message })
   }
 }

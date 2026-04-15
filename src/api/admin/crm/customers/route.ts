@@ -8,13 +8,14 @@ export async function GET(
   const { limit = 50, offset = 0 } = req.query
 
   try {
-    const leads = await crm.listCrmLead({
+    const customers = await crm.listCrmCustomer({
       skip: Number(offset),
       take: Number(limit),
     })
 
     res.json({
-      leads,
+      customers,
+      count: customers.length,
       limit,
       offset,
     })
@@ -30,9 +31,10 @@ export async function POST(
   const crm = req.scope.resolve("crm") as any
 
   try {
-    const lead = await crm.createCrmLead(req.body)
-    res.status(201).json(lead)
+    const customer = await crm.createCrmCustomer(req.body)
+    res.status(201).json(customer)
   } catch (error) {
     res.status(400).json({ error: (error as any).message })
   }
 }
+

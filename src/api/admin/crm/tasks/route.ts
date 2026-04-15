@@ -1,34 +1,38 @@
-import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
-import { CRM_MODULE } from "../../../../modules/crm"
+import type { MedusaRequest, MedusaResponse } from "@medusajs/framework"
 
-export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
-  const crmService: any = req.scope.resolve(CRM_MODULE)
-  const { customer_id, order_id, status, priority, assigned_to, limit, offset } = req.validatedQuery || req.query
+export async function GET(
+  req: MedusaRequest,
+  res: MedusaResponse
+) {
+  const crm = req.scope.resolve("crm") as any
+  const { limit = 50, offset = 0 } = req.query
 
-  const filters: Record<string, unknown> = {}
-  if (customer_id) filters.customer_id = customer_id
-  if (order_id) filters.order_id = order_id
-  if (status) filters.status = status
-  if (priority) filters.priority = priority
-  if (assigned_to) filters.assigned_to = assigned_to
+  try {
+    const tasks = await crm.listCrmTask({
+      skip: Number(offset),
+      take: Number(limit),
+    })
 
-  const take = Math.min(Number(limit) || 50, 100)
-  const skip = Number(offset) || 0
-
-  const [tasks, count] = await crmService.listAndCountCustomerTasks(filters, {
-    take,
-    skip,
-    order: { created_at: "DESC" },
-  })
-
-  res.json({ tasks, count, limit: take, offset: skip })
+    res.json({
+      tasks,
+      limit,
+      offset,
+    })
+  } catch (error) {
+    res.status(500).json({ error: (error as any).message })
+  }
 }
 
-export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
-  const crmService: any = req.scope.resolve(CRM_MODULE)
-  const taskData = req.validatedBody || req.body
+export async function POST(
+  req: MedusaRequest,
+  res: MedusaResponse
+) {
+  const crm = req.scope.resolve("crm") as any
 
-  const task = await crmService.createCustomerTasks(taskData)
-
-  res.json({ task })
+  try {
+    const task = await crm.createCrmTask(req.body)
+    res.status(201).json(task)
+  } catch (error) {
+    res.status(400).json({ error: (error as any).message })
+  }
 }

@@ -1,7 +1,7 @@
 {
   "name": "medusa-plugin-crm",
-  "version": "3.0.4",
-  "description": "Production-ready CRM plugin for MedusaJS v2 — Sales pipeline, campaigns, automation rules, notifications, role-based permissions, CSV export, error logging, settings panel, customer timeline, and 15 admin pages",
+  "version": "1.0.0",
+  "description": "Simple and powerful CRM plugin for MedusaJS v2 — Manage customers, leads, tasks, and send automated email/SMS/WhatsApp campaigns via SendGrid and Twilio",
   "author": "Musafir",
   "license": "MIT",
   "files": [
@@ -14,24 +14,17 @@
   "keywords": [
     "medusa-plugin",
     "medusa-v2",
-    "medusa-plugin-crm",
     "crm",
     "customer-management",
-    "sales-pipeline",
     "leads",
-    "notes",
     "tasks",
     "campaigns",
-    "automation",
-    "notifications",
-    "segments",
-    "tags",
-    "communication-logs",
-    "csv-export",
-    "error-logging",
-    "role-permissions",
-    "customer-timeline",
-    "settings-panel"
+    "email-marketing",
+    "sms-marketing",
+    "whatsapp",
+    "sendgrid",
+    "twilio",
+    "communication-logs"
   ],
   "scripts": {
     "build": "medusa plugin:build",
@@ -50,6 +43,8 @@
   },
   "devDependencies": {
     "@medusajs/admin-sdk": "2.12.2",
+    "@sendgrid/mail": "^8.1.0",
+    "twilio": "^5.0.0",
     "@medusajs/cli": "2.12.2",
     "@medusajs/framework": "2.12.2",
     "@medusajs/medusa": "2.12.2",

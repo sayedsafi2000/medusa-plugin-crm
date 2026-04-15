@@ -1,115 +1,87 @@
-import { defineRouteConfig } from "@medusajs/admin-sdk"
-import { Users } from "@medusajs/icons"
-import { Outlet, Link } from "react-router-dom"
-import { Container, Heading, Text, Button } from "@medusajs/ui"
+"use client"
 
-const CrmPage = () => (
-  <Container>
-    <div className="flex items-center justify-between mb-6">
-      <div>
-        <Heading level="h1">CRM</Heading>
-        <Text className="text-ui-fg-subtle">Customer Relationship Management</Text>
-      </div>
+import { useState, useEffect } from "react"
+import { Button } from "@medusajs/ui"
+
+export default function CRMDashboard() {
+  const [stats, setStats] = useState({
+    totalCustomers: 0,
+    totalLeads: 0,
+    totalTasks: 0,
+    activeCampaigns: 0,
+  })
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const [customersRes, leadsRes, tasksRes, campaignsRes] = await Promise.all([
+          fetch("/admin/crm/customers?limit=1"),
+          fetch("/admin/crm/leads?limit=1"),
+          fetch("/admin/crm/tasks?limit=1"),
+          fetch("/admin/crm/campaigns?limit=1"),
+        ])
+
+        if (customersRes.ok && leadsRes.ok && tasksRes.ok && campaignsRes.ok) {
+          const customers = await customersRes.json()
+          const leads = await leadsRes.json()
+          const tasks = await tasksRes.json()
+          const campaigns = await campaignsRes.json()
+
+          setStats({
+            totalCustomers: customers.count || 0,
+            totalLeads: leads.count || 0,
+            totalTasks: tasks.count || 0,
+            activeCampaigns: campaigns.count || 0,
+          })
+        }
+      } catch (error) {
+        console.error("Failed to fetch CRM stats:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchStats()
+  }, [])
+
+  return (
+    <div className="p-8 bg-white rounded-lg shadow">
+      <h1 className="text-3xl font-bold mb-8">CRM Dashboard</h1>
+
+      {loading ? (
+        <div className="text-center">Loading...</div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <StatCard label="Total Customers" value={stats.totalCustomers} />
+            <StatCard label="Total Leads" value={stats.totalLeads} />
+            <StatCard label="Tasks" value={stats.totalTasks} />
+            <StatCard label="Active Campaigns" value={stats.activeCampaigns} />
+          </div>
+
+          <div className="flex gap-4">
+            <Button asChild>
+              <a href="/admin/crm/customers">Manage Customers</a>
+            </Button>
+            <Button asChild variant="secondary">
+              <a href="/admin/crm/leads">Manage Leads</a>
+            </Button>
+            <Button asChild variant="secondary">
+              <a href="/admin/crm/campaigns">Create Campaign</a>
+            </Button>
+          </div>
+        </>
+      )}
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-      <Link to="notes">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Notes</span>
-          <span className="text-sm text-ui-fg-subtle">Customer notes and annotations</span>
-        </Button>
-      </Link>
-      <Link to="tasks">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Tasks</span>
-          <span className="text-sm text-ui-fg-subtle">Task management and tracking</span>
-        </Button>
-      </Link>
-      <Link to="activities">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Activities</span>
-          <span className="text-sm text-ui-fg-subtle">Activity timeline and history</span>
-        </Button>
-      </Link>
-      <Link to="leads">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Sales Pipeline</span>
-          <span className="text-sm text-ui-fg-subtle">Lead management and pipeline</span>
-        </Button>
-      </Link>
-      <Link to="campaigns">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Campaigns</span>
-          <span className="text-sm text-ui-fg-subtle">Marketing campaigns</span>
-        </Button>
-      </Link>
-      <Link to="automations">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Automations</span>
-          <span className="text-sm text-ui-fg-subtle">Automation rules and workflows</span>
-        </Button>
-      </Link>
-      <Link to="segments">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Segments</span>
-          <span className="text-sm text-ui-fg-subtle">Customer segments</span>
-        </Button>
-      </Link>
-      <Link to="tags">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Tags</span>
-          <span className="text-sm text-ui-fg-subtle">Customer tags</span>
-        </Button>
-      </Link>
-      <Link to="communications">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Communications</span>
-          <span className="text-sm text-ui-fg-subtle">Communication logs</span>
-        </Button>
-      </Link>
-      <Link to="notifications">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Notifications</span>
-          <span className="text-sm text-ui-fg-subtle">Admin notifications</span>
-        </Button>
-      </Link>
-      <Link to="roles">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Roles</span>
-          <span className="text-sm text-ui-fg-subtle">Role-based permissions</span>
-        </Button>
-      </Link>
-      <Link to="settings">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Settings</span>
-          <span className="text-sm text-ui-fg-subtle">CRM configuration</span>
-        </Button>
-      </Link>
-      <Link to="analytics">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Analytics</span>
-          <span className="text-sm text-ui-fg-subtle">CRM analytics dashboard</span>
-        </Button>
-      </Link>
-      <Link to="timeline">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Timeline</span>
-          <span className="text-sm text-ui-fg-subtle">Customer timeline view</span>
-        </Button>
-      </Link>
-      <Link to="error-logs">
-        <Button variant="secondary" className="w-full h-auto py-4 flex flex-col gap-2">
-          <span className="text-lg font-semibold">Error Logs</span>
-          <span className="text-sm text-ui-fg-subtle">Error tracking and debugging</span>
-        </Button>
-      </Link>
+  )
+}
+
+function StatCard({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
+      <h3 className="text-sm font-medium text-gray-600">{label}</h3>
+      <p className="text-2xl font-bold text-indigo-600 mt-2">{value}</p>
     </div>
-    <Outlet />
-  </Container>
-)
-
-export const config = defineRouteConfig({
-  label: "CRM",
-  icon: Users,
-})
-
-export default CrmPage
+  )
+}

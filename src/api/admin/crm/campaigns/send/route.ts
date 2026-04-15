@@ -1,115 +1,69 @@
-import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
-import { Modules } from "@medusajs/framework/utils"
-import { CRM_MODULE } from "../../../../../modules/crm"
+import type { MedusaRequest, MedusaResponse } from "@medusajs/framework"
 
-export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
-  const crmService = req.scope.resolve(CRM_MODULE) as any
-  const { id } = (req.validatedBody || req.body) as { id?: string }
-
-  if (!id) {
-    res.status(400).json({ error: "Campaign id is required" })
-    return
-  }
+export async function POST(
+  req: MedusaRequest,
+  res: MedusaResponse
+) {
+  const crm = req.scope.resolve("crm") as any
+  const campaignService = req.scope.resolve("campaignService") as any
+  const { campaign_id } = req.body as any
 
   try {
-    const campaign = await crmService.retrieveCrmCampaign(id)
-
-    if (campaign.status !== "draft" && campaign.status !== "scheduled") {
-      res.status(400).json({ error: "Campaign must be in draft or scheduled status to send" })
-      return
+    if (!campaign_id) {
+      return res.status(400).json({ error: "campaign_id is required" })
     }
 
-    let recipientIds: string[] = []
+    // Fetch campaign
+    const campaign = await crm.retrieveCrmCampaign(campaign_id)
 
-    if (campaign.segment_id) {
-      const assignments = await crmService.listCustomerSegmentAssignments({
-        segment_id: campaign.segment_id,
-      })
-      recipientIds = assignments.map((a: any) => a.customer_id)
+    if (!campaign) {
+      return res.status(404).json({ error: "Campaign not found" })
     }
 
-    if (recipientIds.length === 0 && campaign.target_audience?.customer_ids) {
-      recipientIds = campaign.target_audience.customer_ids
+    // Get recipients
+    const recipients = campaign.recipients?.customer_ids || []
+    const channels = Object.keys(campaign.channels || {}).filter(
+      (ch) => campaign.channels[ch]
+    )
+
+    if (recipients.length === 0 || channels.length === 0) {
+      return res.status(400).json({ error: "Campaign has no recipients or channels" })
     }
 
-    const customerModule = req.scope.resolve(Modules.CUSTOMER) as any
-    let recipients: any[] = []
-    if (recipientIds.length > 0) {
-      recipients = await customerModule.listCustomers({
-        id: recipientIds,
-      }, {
-        select: ["id", "email", "first_name", "last_name"],
-      })
-    }
+    // Send batch campaign
+    const result = await campaignService.sendBatch(
+      channels,
+      recipients,
+      campaign.template?.subject || "Campaign",
+      campaign.template?.body
+    )
 
-    const notificationModule = req.scope.resolve(Modules.NOTIFICATION) as any
-    let sentCount = 0
-    let failedCount = 0
-
-    const channel = campaign.type === "multi_channel" ? "email" : campaign.type
-
-    for (const recipient of recipients) {
-      try {
-        if (notificationModule?.createNotifications) {
-          await notificationModule.createNotifications({
-            to: recipient.email,
-            channel,
-            template: campaign.template?.template_id || "crm-campaign",
-            data: {
-              campaign_name: campaign.name,
-              campaign_description: campaign.description,
-              customer_name: `${recipient.first_name || ""} ${recipient.last_name || ""}`.trim(),
-              customer_email: recipient.email,
-              ...campaign.template,
-            },
-          })
-        }
-        sentCount++
-      } catch {
-        failedCount++
-      }
-    }
-
-    await crmService.updateCrmCampaigns({
-      id: campaign.id,
-      status: "active",
-      started_at: new Date().toISOString(),
-      total_recipients: recipients.length,
-      sent_count: sentCount,
-      failed_count: failedCount,
+    // Update campaign status
+    await crm.updateCrmCampaign(campaign_id, {
+      status: "running",
+      sent_count: result.sent,
+      failed_count: result.failed,
+      sent_at: new Date(),
     })
 
-    if (sentCount > 0) {
-      await crmService.updateCrmCampaigns({
-        id: campaign.id,
-        status: "completed",
-        completed_at: new Date().toISOString(),
-        delivered_count: sentCount,
-      })
-    }
-
-    for (const recipient of recipients.slice(0, 100)) {
-      await crmService.createCustomerActivities({
-        customer_id: recipient.id,
-        activity_type: "campaign",
-        activity_data: {
-          campaign_id: campaign.id,
-          campaign_name: campaign.name,
-          campaign_type: campaign.type,
-          channel,
-        },
+    // Log communications
+    for (const res_item of result.results) {
+      await crm.createCrmCommunicationLog({
+        campaign_id,
+        channel: res_item.channel,
+        recipient: res_item.recipient,
+        status: res_item.success ? "sent" : "failed",
+        error_message: res_item.error || null,
       })
     }
 
     res.json({
-      campaign_id: campaign.id,
-      status: sentCount > 0 ? "completed" : "failed",
-      total_recipients: recipients.length,
-      sent_count: sentCount,
-      failed_count: failedCount,
+      success: true,
+      sent: result.sent,
+      failed: result.failed,
+      total: recipients.length,
     })
   } catch (error) {
-    console.error("Failed to send campaign:", error)
-    res.status(500).json({ error: "Failed to send campaign" })
+    res.status(500).json({ error: (error as any).message })
   }
 }

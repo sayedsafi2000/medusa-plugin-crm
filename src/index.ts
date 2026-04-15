@@ -1,8 +1,13 @@
 import CrmModule from "./modules/crm"
-import links from "./links"
+import CampaignService from "./modules/crm/service/campaign"
 
 export default {
-  id: "crmModuleService",
+  id: "crm",
   modules: [CrmModule],
-  links: [links],
+  services: [
+    {
+      key: "campaignService",
+      resolve: CampaignService,
+    },
+  ],
 }

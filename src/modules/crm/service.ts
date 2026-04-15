@@ -1,36 +1,55 @@
 import { MedusaService } from "@medusajs/framework/utils"
-import CustomerNote from "./models/customer-note"
-import CustomerTask from "./models/customer-task"
-import CustomerActivity from "./models/customer-activity"
-import CustomerSegment from "./models/customer-segment"
-import CustomerTag from "./models/customer-tag"
-import CustomerTagAssignment from "./models/customer-tag-assignment"
-import CustomerSegmentAssignment from "./models/customer-segment-assignment"
-import Lead from "./models/lead"
-import CommunicationLog from "./models/communication-log"
+import CrmCustomer from "./models/customer"
+import CrmLead from "./models/lead"
+import CrmTask from "./models/task"
 import CrmCampaign from "./models/campaign"
-import Automation from "./models/automation"
-import Notification from "./models/notification"
-import CrmSetting from "./models/crm-setting"
-import ErrorLog from "./models/error-log"
-import CrmRole from "./models/crm-role"
+import CrmCommunicationLog from "./models/communication-log"
+
+export type InjectedDependencies = {
+  logger: any
+}
 
 class CrmModuleService extends MedusaService({
-  CustomerNote,
-  CustomerTask,
-  CustomerActivity,
-  CustomerSegment,
-  CustomerTag,
-  CustomerTagAssignment,
-  CustomerSegmentAssignment,
-  Lead,
-  CommunicationLog,
+  CrmCustomer,
+  CrmLead,
+  CrmTask,
   CrmCampaign,
-  Automation,
-  Notification,
-  CrmSetting,
-  ErrorLog,
-  CrmRole,
-}) {}
+  CrmCommunicationLog,
+}) {
+  private logger: any
+
+  constructor(container: any) {
+    super(container)
+    this.logger = container.logger
+  }
+
+  async syncCustomersFromMedusa() {
+    try {
+      this.logger.info("[CRM] Syncing customers from Medusa...")
+      // Sync logic will be implemented in workflow
+    } catch (error) {
+      this.logger.error(`[CRM] Failed to sync customers: ${error}`)
+    }
+  }
+
+  async fetchOrdersForCustomer(customerId: string) {
+    try {
+      // Fetch orders for a specific customer
+      return []
+    } catch (error) {
+      this.logger.error(`[CRM] Failed to fetch orders for customer ${customerId}: ${error}`)
+      throw error
+    }
+  }
+
+  async fetchProductsFromMedusa() {
+    try {
+      this.logger.info("[CRM] Fetching products from Medusa...")
+      return []
+    } catch (error) {
+      this.logger.error(`[CRM] Failed to fetch products: ${error}`)
+    }
+  }
+}
 
 export default CrmModuleService

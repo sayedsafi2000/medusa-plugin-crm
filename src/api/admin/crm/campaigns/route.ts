@@ -1,30 +1,38 @@
-import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
-import { CRM_MODULE } from "../../../../modules/crm"
+import type { MedusaRequest, MedusaResponse } from "@medusajs/framework"
 
-export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
-  const crmService = req.scope.resolve(CRM_MODULE) as any
-  const { status, type, limit, offset } = req.validatedQuery || req.query
+export async function GET(
+  req: MedusaRequest,
+  res: MedusaResponse
+) {
+  const crm = req.scope.resolve("crm") as any
+  const { limit = 50, offset = 0 } = req.query
 
-  const filters: Record<string, unknown> = {}
-  if (status) filters.status = status
-  if (type) filters.type = type
+  try {
+    const campaigns = await crm.listCrmCampaign({
+      skip: Number(offset),
+      take: Number(limit),
+    })
 
-  const take = Math.min(Number(limit) || 50, 100)
-  const skip = Number(offset) || 0
-
-  const [campaigns, count] = await crmService.listAndCountCrmCampaigns(filters, {
-    take,
-    skip,
-    order: { created_at: "DESC" },
-  })
-
-  res.json({ campaigns, count, limit: take, offset: skip })
+    res.json({
+      campaigns,
+      limit,
+      offset,
+    })
+  } catch (error) {
+    res.status(500).json({ error: (error as any).message })
+  }
 }
 
-export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
-  const crmService = req.scope.resolve(CRM_MODULE) as any
-  const campaignData = req.validatedBody || req.body
+export async function POST(
+  req: MedusaRequest,
+  res: MedusaResponse
+) {
+  const crm = req.scope.resolve("crm") as any
 
-  const campaign = await crmService.createCrmCampaigns(campaignData)
-  res.json({ campaign })
+  try {
+    const campaign = await crm.createCrmCampaign(req.body)
+    res.status(201).json(campaign)
+  } catch (error) {
+    res.status(400).json({ error: (error as any).message })
+  }
 }
