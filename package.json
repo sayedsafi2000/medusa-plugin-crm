@@ -1,6 +1,6 @@
 {
   "name": "medusa-plugin-crm-sayedsafi",
-  "version": "4.1.7",
+  "version": "4.1.8",
   "description": "Simple and powerful CRM plugin for MedusaJS v2 — Manage customers, leads, tasks, and send automated email/SMS/WhatsApp campaigns via SendGrid and Twilio",
   "author": "Musafir",
   "license": "MIT",
