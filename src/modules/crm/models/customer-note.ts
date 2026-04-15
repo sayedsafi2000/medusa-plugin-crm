@@ -1,4 +1,4 @@
-declare class CrmCustomerNote {
+class CrmCustomerNote {
   id: string
   customer_id: string
   content: string
