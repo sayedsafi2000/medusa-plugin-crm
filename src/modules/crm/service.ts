@@ -4,6 +4,8 @@ import CrmLead from "./models/lead"
 import CrmTask from "./models/task"
 import CrmCampaign from "./models/campaign"
 import CrmCommunicationLog from "./models/communication-log"
+import CrmCustomerNote from "./models/customer-note"
+import CrmEmailTemplate from "./models/email-template"
 
 export type InjectedDependencies = {
   logger: any
@@ -15,6 +17,8 @@ class CrmModuleService extends MedusaService({
   CrmTask,
   CrmCampaign,
   CrmCommunicationLog,
+  CrmCustomerNote,
+  CrmEmailTemplate,
 }) {
   private logger: any
 

@@ -5,37 +5,23 @@ export async function GET(
   res: MedusaResponse
 ) {
   const crm = req.scope.resolve("crm") as any
-  const { 
-    search,
-    status,
-    company,
-    limit = 50, 
-    offset = 0 
-  } = req.query
+  const { customer_id, limit = 50, offset = 0 } = req.query
 
   try {
-    const filters: any = {}
-    
-    if (status) filters.status = status
-    if (company) filters.company = company
-    if (search) {
-      filters.$or = [
-        { name: { $ilike: `%${search}%` } },
-        { email: { $ilike: `%${search}%` } },
-        { company: { $ilike: `%${search}%` } },
-      ]
+    if (!customer_id) {
+      return res.status(400).json({ error: "customer_id is required" })
     }
 
-    const leads = await crm.listCrmLead({
-      filters: Object.keys(filters).length > 0 ? filters : undefined,
+    const notes = await crm.listCrmCustomerNote({
+      filters: { customer_id },
       skip: Number(offset),
       take: Number(limit),
       orderBy: { created_at: "DESC" },
     })
 
     res.json({
-      leads,
-      count: leads.length,
+      notes,
+      count: notes.length,
       limit,
       offset,
     })
@@ -49,10 +35,20 @@ export async function POST(
   res: MedusaResponse
 ) {
   const crm = req.scope.resolve("crm") as any
+  const { customer_id, content, created_by } = req.body as any
 
   try {
-    const lead = await crm.createCrmLead(req.body)
-    res.status(201).json(lead)
+    if (!customer_id || !content) {
+      return res.status(400).json({ error: "customer_id and content are required" })
+    }
+
+    const note = await crm.createCrmCustomerNote({
+      customer_id,
+      content,
+      created_by,
+    })
+
+    res.status(201).json(note)
   } catch (error) {
     res.status(400).json({ error: (error as any).message })
   }

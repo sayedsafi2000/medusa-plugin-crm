@@ -7,6 +7,10 @@ A simple and powerful CRM plugin for MedusaJS v2 that helps you manage customers
 ✅ **Customer Management** - Sync and manage all Medusa customers  
 ✅ **Lead Management** - Track and nurture sales leads with status pipeline  
 ✅ **Task Management** - Create and track tasks for your sales team  
+✅ **Customer Notes** - Add internal notes to customer records  
+✅ **Email Templates** - Pre-built email templates for faster campaigns  
+✅ **Bulk Import/Export** - Import customers & leads as CSV, export data  
+✅ **Advanced Search** - Filter customers by name, email, status, company  
 ✅ **Email Campaigns** - Send campaigns via SendGrid  
 ✅ **SMS Campaigns** - Send SMS via Twilio  
 ✅ **WhatsApp Campaigns** - Send WhatsApp messages via Twilio  
@@ -187,7 +191,90 @@ Response:
 ### Communication Logs
 - `GET /admin/crm/communications` - List all sent messages and their status
 
-## Database Schema
+### Customer Notes
+- `GET /admin/crm/notes?customer_id=cust_123` - Get notes for a customer
+- `POST /admin/crm/notes` - Add a note to a customer
+
+#### Body Example:
+```json
+{
+  "customer_id": "cust_123",
+  "content": "Interested in bulk orders",
+  "created_by": "user@example.com"
+}
+```
+
+### Email Templates
+- `GET /admin/crm/templates?category=welcome` - List email templates
+- `POST /admin/crm/templates` - Create a new email template
+
+#### Body Example:
+```json
+{
+  "name": "Welcome Email",
+  "subject": "Welcome to {{store_name}}!",
+  "body": "<h1>Hello {{name}}</h1><p>Welcome to our store...</p>",
+  "category": "welcome",
+  "variables": ["store_name", "name"],
+  "is_default": true
+}
+```
+
+### Bulk Import
+- `POST /admin/crm/import` - Bulk import customers or leads
+
+#### Body Example:
+```json
+{
+  "type": "customer",
+  "data": [
+    {
+      "email": "user1@example.com",
+      "name": "User One",
+      "phone": "+1234567890",
+      "medusa_customer_id": "cus_123"
+    },
+    {
+      "email": "user2@example.com",
+      "name": "User Two",
+      "phone": "+0987654321",
+      "medusa_customer_id": "cus_456"
+    }
+  ]
+}
+```
+
+### Bulk Export
+- `GET /admin/crm/export?type=customer` - Export customers or leads as CSV
+- Supports: `type=customer` or `type=lead`
+- Returns: CSV file download
+
+## Advanced Features
+
+### Search & Filter Customers
+```
+GET /admin/crm/customers?search=john&email=john@example.com
+GET /admin/crm/customers?phone=+1234567890
+```
+
+### Search & Filter Leads
+```
+GET /admin/crm/leads?search=acme&status=qualified&company=ACME
+```
+
+## Changelog
+
+### 4.1.0 (April 16, 2025)
+- ✨ **Customer Notes** - Add and manage internal notes on customer records
+- ✨ **Email Templates** - Pre-built templates with variable support
+- ✨ **Bulk Import/Export** - CSV import for customers/leads, export data
+- ✨ **Advanced Search** - Filter by name, email, phone, status, company
+- ✨ **New API Endpoints** - /admin/crm/notes, /admin/crm/templates, /admin/crm/import, /admin/crm/export
+- ✨ **Admin UI Components** - Customer notes panel, template builder, bulk import/export tool
+- 🔧 **Database Safety** - Separate migrations prevent conflicts with existing installations
+- ✅ **100% Backward Compatible** - All v4.0.1 installations upgrade safely
+
+### 4.0.1 (April 16, 2025)
 
 ### crm_customer
 - `id` - Primary key (UUID)
@@ -349,6 +436,12 @@ For issues and feature requests: [GitHub Issues](https://github.com/sayedsafi200
 MIT © 2025 Musafir
 
 ## Changelog
+
+### 4.0.1 (April 16, 2025)
+- 📝 Added safety documentation - confirmed plugin doesn't interfere with Medusa auth
+- ✅ Verified no hooks into customer signup or Google OAuth
+- ✅ Confirmed all CRM data is isolated and optional
+- 🎯 Removed unnecessary module loader for cleaner architecture
 
 ### 4.0.0 (April 16, 2025)
 - ✨ **MAJOR REWRITE** - Simplified from 15+ features to core essentials
