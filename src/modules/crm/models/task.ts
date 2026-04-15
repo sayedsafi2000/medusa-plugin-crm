@@ -1,15 +1,15 @@
 class CrmTask {
-  declare id: string
-  declare customer_id: string | null
-  declare lead_id: string | null
-  declare title: string
-  declare description: string | null
-  declare status: "todo" | "in_progress" | "completed" | "cancelled"
-  declare priority: "low" | "normal" | "high"
-  declare due_date: Date | null
-  declare assigned_to: string | null
-  declare created_at: Date
-  declare updated_at: Date
+id: string
+customer_id: string | null
+lead_id: string | null
+title: string
+description: string | null
+status: "todo" | "in_progress" | "completed" | "cancelled"
+priority: "low" | "normal" | "high"
+due_date: Date | null
+assigned_to: string | null
+created_at: Date
+updated_at: Date
 }
 
 export default CrmTask
