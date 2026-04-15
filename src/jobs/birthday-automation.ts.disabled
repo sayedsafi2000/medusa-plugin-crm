@@ -1,0 +1,30 @@
+import { MedusaContainer } from "@medusajs/framework/types"
+import { CRM_MODULE } from "../modules/crm"
+
+export default async function birthdayAutomationJob(container: MedusaContainer) {
+  const crmService: any = container.resolve(CRM_MODULE)
+
+  try {
+    const automations = await crmService.listAutomations({
+      type: "birthday",
+      status: "active",
+    })
+
+    for (const automation of automations) {
+      await crmService.updateAutomations({
+        id: automation.id,
+        last_run_at: new Date().toISOString(),
+        run_count: (automation.run_count || 0) + 1,
+      })
+
+      console.log(`[CRM] Ran birthday automation: ${automation.name}`)
+    }
+  } catch (error) {
+    console.error("[CRM] Failed to run birthday automation job:", error)
+  }
+}
+
+export const config = {
+  name: "birthday-automation",
+  schedule: "0 8 * * *",
+}

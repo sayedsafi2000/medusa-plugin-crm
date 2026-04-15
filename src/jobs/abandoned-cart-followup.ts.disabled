@@ -1,0 +1,60 @@
+import { MedusaContainer } from "@medusajs/framework/types"
+import { CRM_MODULE } from "../modules/crm"
+
+export default async function abandonedCartFollowupJob(container: MedusaContainer) {
+  const crmService: any = container.resolve(CRM_MODULE)
+
+  try {
+    const automations = await crmService.listAutomations({
+      type: "abandoned_cart",
+      status: "active",
+    })
+
+    for (const automation of automations) {
+      try {
+        await crmService.updateAutomations({
+          id: automation.id,
+          last_run_at: new Date().toISOString(),
+          run_count: (automation.run_count || 0) + 1,
+          success_count: (automation.success_count || 0) + 1,
+        })
+
+        await crmService.createNotifications({
+          recipient_id: "admin",
+          recipient_type: "admin",
+          type: "custom",
+          title: "Abandoned Cart Follow-up",
+          message: `Automation "${automation.name}" ran successfully. ${automation.run_count + 1} total runs.`,
+          severity: "info",
+          reference_type: "automation",
+          reference_id: automation.id,
+        })
+
+        console.log(`[CRM] Ran abandoned cart automation: ${automation.name}`)
+      } catch (error) {
+        await crmService.updateAutomations({
+          id: automation.id,
+          last_run_at: new Date().toISOString(),
+          run_count: (automation.run_count || 0) + 1,
+          failure_count: (automation.failure_count || 0) + 1,
+          last_error: error instanceof Error ? error.message : String(error),
+        })
+
+        await crmService.createErrorLogs({
+          source: "job",
+          error_message: `Abandoned cart automation "${automation.name}" failed: ${error instanceof Error ? error.message : String(error)}`,
+          reference_type: "automation",
+          reference_id: automation.id,
+          status: "pending",
+        })
+      }
+    }
+  } catch (error) {
+    console.error("[CRM] Failed to run abandoned cart follow-up job:", error)
+  }
+}
+
+export const config = {
+  name: "abandoned-cart-followup",
+  schedule: "0 */6 * * *",
+}

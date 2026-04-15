@@ -1,7 +1,9 @@
 import { Module } from "@medusajs/framework/utils"
 import CrmModuleService from "./service"
 
-export const CRM_MODULE = "crm"
+/** Awilix key for `CrmModuleService` (same value used in `container.resolve`) */
+export const CRM_MODULE = "crmModuleService"
+/** @deprecated Use `CRM_MODULE` — kept for backwards compatibility with existing imports */
 export const crmModuleService = CRM_MODULE
 
 export default Module(CRM_MODULE, {

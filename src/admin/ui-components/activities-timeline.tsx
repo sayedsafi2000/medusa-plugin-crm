@@ -9,6 +9,10 @@ type Activity = {
   created_at: string
 }
 
+type ActivitiesListResponse = {
+  activities?: Activity[]
+}
+
 const activityIcons = {
   order: "📦",
   note: "📝",
@@ -29,8 +33,8 @@ export const ActivitiesTimeline = ({ customerId }: { customerId?: string }) => {
           ? `/admin/crm/activities?customer_id=${customerId}`
           : `/admin/crm/activities`
         const response = await fetch(url)
-        const data = await response.json()
-        setActivities(data.activities || [])
+        const data = (await response.json()) as ActivitiesListResponse
+        setActivities(data.activities ?? [])
       } catch (error) {
         console.error("Failed to fetch activities:", error)
       } finally {
@@ -60,7 +64,13 @@ export const ActivitiesTimeline = ({ customerId }: { customerId?: string }) => {
               <div className="flex-1">
                 <div className="flex justify-between">
                   <Text className="font-medium capitalize">
-                    {activity.activity_type.replace("_", " ")}
+                    {activity.activity_type === "other" &&
+                    activity.activity_data?.event_name
+                      ? String(activity.activity_data.event_name).replace(
+                          /\./g,
+                          " "
+                        )
+                      : activity.activity_type.replace("_", " ")}
                   </Text>
                   <Text className="text-sm text-gray-500">
                     {new Date(activity.created_at).toLocaleString()}
