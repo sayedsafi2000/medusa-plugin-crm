@@ -56,4 +56,10 @@ class CrmModuleService extends MedusaService({
   }
 }
 
+(CrmModuleService.prototype as any).__joinerConfig = function() {
+  return {
+    serviceName: "crm",
+  }
+}
+
 export default CrmModuleService

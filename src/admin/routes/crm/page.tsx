@@ -1,7 +1,5 @@
-"use client"
-
 import { useState, useEffect } from "react"
-import { Button } from "@medusajs/ui"
+import { Button, Container, Heading, Text, Stack, Grid } from "@medusajs/ui"
 
 export default function CRMDashboard() {
   const [stats, setStats] = useState({
@@ -46,42 +44,44 @@ export default function CRMDashboard() {
   }, [])
 
   return (
-    <div className="p-8 bg-white rounded-lg shadow">
-      <h1 className="text-3xl font-bold mb-8">CRM Dashboard</h1>
+    <Container>
+      <Stack gap="x6">
+        <Heading level="h1">CRM Dashboard</Heading>
 
-      {loading ? (
-        <div className="text-center">Loading...</div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatCard label="Total Customers" value={stats.totalCustomers} />
-            <StatCard label="Total Leads" value={stats.totalLeads} />
-            <StatCard label="Tasks" value={stats.totalTasks} />
-            <StatCard label="Active Campaigns" value={stats.activeCampaigns} />
-          </div>
+        {loading ? (
+          <div className="text-center py-12">Loading...</div>
+        ) : (
+          <>
+            <Grid columns={{ xs: 1, sm: 2, lg: 4 }} gap="x6">
+              <StatCard label="Total Customers" value={stats.totalCustomers} />
+              <StatCard label="Total Leads" value={stats.totalLeads} />
+              <StatCard label="Tasks" value={stats.totalTasks} />
+              <StatCard label="Active Campaigns" value={stats.activeCampaigns} />
+            </Grid>
 
-          <div className="flex gap-4">
-            <Button asChild>
-              <a href="/admin/crm/customers">Manage Customers</a>
-            </Button>
-            <Button asChild variant="secondary">
-              <a href="/admin/crm/leads">Manage Leads</a>
-            </Button>
-            <Button asChild variant="secondary">
-              <a href="/admin/crm/campaigns">Create Campaign</a>
-            </Button>
-          </div>
-        </>
-      )}
-    </div>
+            <Stack direction="row" gap="x3">
+              <Button asChild>
+                <a href="/admin/crm/customers">Manage Customers</a>
+              </Button>
+              <Button asChild variant="secondary">
+                <a href="/admin/crm/leads">Manage Leads</a>
+              </Button>
+              <Button asChild variant="secondary">
+                <a href="/admin/crm/campaigns">Create Campaign</a>
+              </Button>
+            </Stack>
+          </>
+        )}
+      </Stack>
+    </Container>
   )
 }
 
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
-      <h3 className="text-sm font-medium text-gray-600">{label}</h3>
-      <p className="text-2xl font-bold text-indigo-600 mt-2">{value}</p>
+    <div className="p-6 rounded-lg border border-ui-border-strong bg-ui-bg-base shadow-sm">
+      <Text size="small" className="text-ui-fg-muted">{label}</Text>
+      <Text size="xl" className="font-bold mt-2">{value}</Text>
     </div>
   )
 }
